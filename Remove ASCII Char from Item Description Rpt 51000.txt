@@ -1,0 +1,66 @@
+OBJECT Report 51000 Remove Control Chars NAV2018
+{
+  OBJECT-PROPERTIES
+  {
+    Date=08/14/19;
+    Time=[ 1:25:22 PM];
+    Modified=Yes;
+    Version List=;
+  }
+  PROPERTIES
+  {
+    ProcessingOnly=Yes;
+  }
+  DATASET
+  {
+    { 1000000000;;DataItem;                  ;
+               DataItemTable=Table27;
+               OnAfterGetRecord=BEGIN
+                                  Length := STRLEN(Item.Description);
+                                  FOR Loop := 1 TO Length
+                                    DO
+                                      BEGIN
+                                        ASCIIChar := Item.Description[Loop];
+                                        CharINT := ASCIIChar;
+                                        IF (CharINT < 32) OR (CharINT > 125) THEN
+                                          BEGIN
+                                            //MESSAGE('Text = %1, Char = %2 ',Item.Description[Loop],CharINT);
+                                            MESSAGE('Old item description is = %1',Item."No."+'-'+Item.Description);
+                                            Item.Description := DELSTR(Item.Description,Loop,1);
+                                            //MESSAGE('Text = %1, Char = %2 ',Item.Description[Loop],CharINT);
+                                            MESSAGE('New item description is = %1',Item."No."+'-'+Item.Description);
+                                            Item.MODIFY;
+                                          END;
+                                      END;
+                                END;
+                                 }
+
+  }
+  REQUESTPAGE
+  {
+    PROPERTIES
+    {
+    }
+    CONTROLS
+    {
+    }
+  }
+  LABELS
+  {
+  }
+  CODE
+  {
+    VAR
+      Length@1000000000 : Integer;
+      Loop@1000000001 : Integer;
+      ASCIIChar@1000000002 : Char;
+      CharINT@1000000003 : Integer;
+
+    BEGIN
+    END.
+  }
+  RDLDATA
+  {
+  }
+}
+
